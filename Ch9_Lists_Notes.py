@@ -408,3 +408,190 @@ def q24answer(messages):
     print("====================")
 
 q24answer(["oh gosh dang it", "dang dang bang", "safe message"])
+
+#CHALLENGE 1: Evens and Odds
+def get_odds_and_evens(numbers):
+    #Takes a list as the input
+    num_odds = 0
+    num_evens = 0
+
+    #Loop through the list, and tally the number of even and odd numbers
+    for number in numbers:
+        if number % 2 != 0:
+            num_odds += 1
+        else:
+            num_evens += 1
+
+    return num_odds, num_evens
+    #Returns two integers
+
+def c1answer(numbers):
+    print("C1 answer:")
+    print(get_odds_and_evens(numbers))
+    print("====================")
+
+c1answer([1, 7, 2, 5, 3, 4])
+
+
+#CHALLENGE 2: Even Teams
+def split_players_into_teams(players):
+    #Accepts a list as input
+    even_team = players[::2]
+    #Take the players with the even indexes
+    odd_team = players[1::2]
+    #Take the players with the odd indexes
+    #Note that in the case of an odd number of players, odd_team will have one more player
+
+    return even_team, odd_team
+
+def c2answer(players):
+    print("C2 answer:")
+    print(split_players_into_teams(players))
+    print("====================")
+
+c2answer(["Amy", "Brian", "Cassie", "Daniel", "Evan", "Gregory"])
+
+
+#CHALLENGE 3: Alchemy ingredients
+def check_ingredient_match(recipe, ingredients):
+    #Takes two lists as inputs
+    """
+    The goal is to:
+     1) Calculate the percentage of the recipe that is met
+     2) Return a list of the unobtained items
+    We are taking into account recipes with multiple copies of the same ingredient
+    We must take into account that the items might be equal, but in a different order
+    For this example, it's assumed the lists are the same length
+    """
+    #Define an empty list, and make copies of the input lists
+    missing_ingredients = []
+    working_recipe = recipe
+    working_ingredients = ingredients
+    
+    #FOR EACH NEEDED INGREDIENT:
+    for i in range(0, len(recipe)):
+        #Set the boolean to False by default
+        matching_ingredient = False
+        #Loop through the ingredients to see if the player has it
+        for j in range(0, len(ingredients)):
+            #If there's a match, mark off the items in the working lists
+            if recipe[i] == ingredients[j]:
+                matching_ingredient = True
+                working_recipe[i] = "USED"
+                working_ingredients[j] = "USED"
+        #If there was no match, mark the required ingredient as missing
+        if matching_ingredient == False:
+            missing_ingredients.append(recipe[i])
+
+    #Calculate the percentage of required ingredients (1 - % missing) the player had
+    recipe_completion = 1 - (len(missing_ingredients) / len(recipe))
+
+    return recipe_completion, missing_ingredients
+    #Returns a float and a list
+
+def c3answer(recipe, ingredients):
+    print("C3 answer:")
+    print(check_ingredient_match(recipe, ingredients))
+    print("====================")
+
+c3answer(
+    [
+        "Dragon Scale", "Unicorn Hair", "Phoenix Feather", "Troll Tusk", 
+        "Mandrake Root","Griffin Feather", "Elf Dust","Goblin Ear"
+    ],
+    [
+        "Dragon Scale", "Goblin Ear", "Phoenix Feather", "Elf Dust",
+        "Mandrake Root", "Griffin Feather", "Elf Dust", "Goblin Ear"
+    ]
+)
+
+"""
+This may not be the simplest solution, but it was the one I came up with to address all the edge cases.
+There may be some way to take advantage of the fact that the lists are the same length. 
+"""
+
+
+#CHALLENGE 4: Validate Path
+def validate_path(expected_path, character_path):
+    """
+    The function takes two lists as inputs.
+    The goal is to compare the charted path to the one the character took
+    The first item in the character_path list will always be the character name
+    """
+    #Define variable for tallying the number of matching waypoints
+    matching_waypoints = 0
+    for i in range(0, len(expected_path)):
+        #If they match, add 1 to the running total
+        if expected_path[i] == character_path[i + 1]:
+            #The index + 1 is to offset the first index being the character name
+            matching_waypoints += 1
+    
+    character_name = character_path[0]
+    accuracy = matching_waypoints / len(expected_path) * 100
+    #Multiply by 100 to format the number as a percentage
+    return character_name, accuracy
+
+def c4answer(expected_path, character_path):
+    print("C4 answer:")
+    print(validate_path(expected_path, character_path))
+    print("====================")
+
+c4answer(
+    ["A", "B", "C", "D", "E"],
+    ["Arthur", "A", "X", "C", "D", "E"]
+)
+
+
+#CHALLENGE 5: Double the string
+def double_string(string):
+#Takes a string as the input
+    """
+    The goal of this function is to double every character in the string
+    For example, "TEST" becomes "TTEESSTT"
+    Spaces count as characters, and should be doubled as well
+    """
+    #Create an empty list that we'll put the characters in
+    split_list = []
+    #Split up the string
+    split_string = string.split()
+    #Note that the default delimiter for .split() is a space
+    #FOR EACH WORD:
+    for word in split_string:
+        #Define an empty variable to store the characters
+        new_word = []
+        #FOR EACH CHARACTER:
+        #Note that we can loop through characters in a string
+        for character in word:
+            new_word.append(character)
+            new_word.append(character)
+        #Add the new word to the resulting list, then move on to the next word
+        split_list.append(new_word)
+    """
+    Now we have a list of lists, with these properties:
+    1) Each index is a word in the original phrase
+    2) Each list contains characters doubled from the original word
+
+    To get the desired output, we still need to:
+    1) Turn each list into a string, with no spaces
+    2) Combine the list of words into one string, with a double space between each word.
+    """
+    combined_list = []
+    #FOR EACH MODIFIED WORD:
+    for word in split_list:
+        combined_string = "".join(word)
+        combined_list.append(combined_string)
+    #Rejoin the list as one string, adding two spaces between each word
+    resulting_string = "  ".join(combined_list)
+    return resulting_string
+
+def c5answer(string):
+    print("C5 answer:")
+    print(double_string(string))
+    print("====================")
+
+c5answer("Hello there")
+"""
+I'm sure there's a more elegant solution to this last challenge,
+but this is what I found worked. 
+Perhaps we don't need to split up the string to begin with?
+"""
